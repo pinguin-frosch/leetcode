@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"pinguinfrosch.com/utils"
+)
 
 func main() {
 	s := "([[}]])"
@@ -9,44 +12,8 @@ func main() {
 
 }
 
-type Stack[T any] struct {
-	data []T
-}
-
-func NewStack[T any]() *Stack[T] {
-	s := Stack[T]{}
-	s.data = make([]T, 0)
-	return &s
-}
-
-func (s *Stack[T]) Len() int {
-	return len(s.data)
-}
-
-func (s *Stack[T]) Push(obj T) {
-	s.data = append(s.data, obj)
-}
-
-func (s *Stack[T]) Pop() T {
-	length := s.Len()
-	if length == 0 {
-		panic("cannot pop, empty stack")
-	}
-	obj := s.data[length-1]
-	s.data = s.data[:length-1]
-	return obj
-}
-
-func (s *Stack[T]) Seek() T {
-	length := s.Len()
-	if length == 0 {
-		panic("cannot seek, empty stack")
-	}
-	return s.data[length-1]
-}
-
 func isValid(s string) bool {
-	stack := NewStack[rune]()
+	stack := utils.NewStack[rune]()
 	for _, c := range s {
 		if c == '(' || c == '[' || c == '{' {
 			stack.Push(c)
@@ -54,7 +21,7 @@ func isValid(s string) bool {
 			if stack.Len() == 0 {
 				return false
 			}
-			obj := stack.Pop()
+			obj, _ := stack.Pop()
 			if c == ']' && obj != '[' {
 				return false
 			}
